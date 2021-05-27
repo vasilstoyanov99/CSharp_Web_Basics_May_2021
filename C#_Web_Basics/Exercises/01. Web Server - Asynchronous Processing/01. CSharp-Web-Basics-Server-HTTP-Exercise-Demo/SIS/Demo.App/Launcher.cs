@@ -7,7 +7,7 @@ using SIS.WebServer.Routing.Contracts;
 
 namespace Demo.App
 {
-    class Program
+    class Launcher
     {
         static void Main(string[] args)
         {

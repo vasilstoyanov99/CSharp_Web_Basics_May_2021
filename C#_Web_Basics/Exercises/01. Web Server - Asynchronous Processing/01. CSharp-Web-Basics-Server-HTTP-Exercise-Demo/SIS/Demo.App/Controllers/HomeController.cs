@@ -10,8 +10,16 @@ namespace Demo.App.Controllers
         public IHttpResponse Home(IHttpRequest httpRequest)
         {
             return this.View();
+            //string content = "<h1> Hello, World!</h1>";
+
+            //return new HtmlResult(content, HttpResponseStatusCode.Ok);
         }
 
-        
+        public IHttpResponse Index(IHttpRequest request)
+        {
+            string content = "<h1> Hello, World!</h1>";
+
+            return new HtmlResult(content, HttpResponseStatusCode.Ok);
+        }
     }
 }
