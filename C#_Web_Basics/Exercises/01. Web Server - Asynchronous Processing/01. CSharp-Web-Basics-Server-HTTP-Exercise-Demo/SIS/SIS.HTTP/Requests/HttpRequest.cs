@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using SIS.HTTP.Common;
+using SIS.HTTP.Cookies;
+using SIS.HTTP.Cookies.Contracts;
 using SIS.HTTP.Enums;
 using SIS.HTTP.Exceptions;
 using SIS.HTTP.Headers;
@@ -18,6 +20,7 @@ namespace SIS.HTTP.Requests
 
             this.FormData = new Dictionary<string, object>();
             this.QueryData = new Dictionary<string, object>();
+            this.HttpCookieCollection = new HttpCookieCollection();
             this.Headers = new HttpHeaderCollection();
 
             this.ParseRequest(requestString);
@@ -29,6 +32,8 @@ namespace SIS.HTTP.Requests
         public Dictionary<string, object> QueryData { get; }
         public IHttpHeaderCollection Headers { get; }
         public HttpRequestMethod RequestMethod { get; private set; }
+
+        public IHttpCookieCollection HttpCookieCollection { get; }
 
         private bool IsValidRequestLine(string[] requestLineParams)
         {
@@ -53,6 +58,7 @@ namespace SIS.HTTP.Requests
             return this.Url.Split('?').Length > 1;
         }
 
+
         private IEnumerable<string> ParsePlainRequestHeaders(string[] requestLines)
         {
             for (int i = 1; i < requestLines.Length - 1; i++)
@@ -60,6 +66,33 @@ namespace SIS.HTTP.Requests
                 if (!string.IsNullOrEmpty(requestLines[i]))
                 {
                     yield return requestLines[i];
+                }
+            }
+        }
+
+        public void ParseCookies()
+        {
+            var searchValue = "Cookie";
+            if (Headers.ContainsHeader(searchValue) == true)
+            {
+                var value = Headers.GetHeader(searchValue).Value;
+                string[] spitedData = value.Split(new char[] { '=', ';', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var cookieKey = spitedData[0];
+                var cookieValue = spitedData[1];
+                var expireDays = int.Parse(spitedData[3]);
+                var path = spitedData[5];
+                bool isHttpOnly = spitedData[6] != "HttpOnly" ? true : false;
+                bool isCookieNew = HttpCookieCollection.ContainsCookie(cookieKey);
+
+                if (isCookieNew)
+                {
+                    var newCookie = new HttpCookie(cookieKey, cookieValue, expireDays, path);
+                    HttpCookieCollection.AddCookie(newCookie);
+                }
+                else
+                {
+                    var oldCookie = HttpCookieCollection.GetCookie(cookieKey);
+                    oldCookie.IsNew = false;
                 }
             }
         }
@@ -148,7 +181,7 @@ namespace SIS.HTTP.Requests
             this.ParseRequestPath();
 
             this.ParseRequestHeaders(this.ParsePlainRequestHeaders(splitRequestString).ToArray());
-            //this.ParseCookies();
+            this.ParseCookies();
 
             this.ParseRequestParameters(splitRequestString[splitRequestString.Length - 1]);
         }

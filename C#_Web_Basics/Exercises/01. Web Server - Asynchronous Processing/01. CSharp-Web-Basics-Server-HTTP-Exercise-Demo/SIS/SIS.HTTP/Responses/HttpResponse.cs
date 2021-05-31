@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Text;
 using SIS.HTTP.Common;
+using SIS.HTTP.Cookies;
+using SIS.HTTP.Cookies.Contracts;
 using SIS.HTTP.Enums;
 using SIS.HTTP.Extensions;
 using SIS.HTTP.Headers;
@@ -22,11 +24,14 @@ namespace SIS.HTTP.Responses
         {
             CoreValidator.ThrowIfNull(statusCode, nameof(statusCode));
             this.StatusCode = statusCode;
+            this.HttpCookieCollection = new HttpCookieCollection();
         }
 
         public HttpResponseStatusCode StatusCode { get; set; }
 
         public IHttpHeaderCollection Headers { get; }
+
+        public IHttpCookieCollection HttpCookieCollection { get; }
 
         public byte[] Content { get; set; }
 
@@ -54,14 +59,30 @@ namespace SIS.HTTP.Responses
             return httpResponseBytesWithBody;
         }
 
+        public void AddCookie(HttpCookie cookie)
+        {
+            if (!HttpCookieCollection.ContainsCookie(cookie.Key))
+            {
+                HttpCookieCollection.AddCookie(cookie);
+            }
+        }
+
         public override string ToString()
         {
             StringBuilder result = new StringBuilder();
 
             result
-                .Append($"{GlobalConstants.HttpOneProtocolFragment} {this.StatusCode.GetStatusLine()}")
+                .Append($"{GlobalConstants.HttpOneProtocolFragment} {(int)this.StatusCode}" +
+                        $" {this.StatusCode.ToString()}")
                 .Append(GlobalConstants.HttpNewLine)
-                .Append($"{this.Headers}").Append(GlobalConstants.HttpNewLine);
+                .Append($"{this.Headers}")
+                .Append(GlobalConstants.HttpNewLine);
+
+            if (this.HttpCookieCollection.HasCookies())
+            {
+                result.Append($"Set-Cookie: {this.HttpCookieCollection}")
+                    .Append(GlobalConstants.HttpNewLine);
+            }
 
             result.Append(GlobalConstants.HttpNewLine);
 

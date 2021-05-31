@@ -1,4 +1,5 @@
-﻿using SIS.HTTP.Enums;
+﻿using SIS.HTTP.Cookies;
+using SIS.HTTP.Enums;
 using SIS.HTTP.Headers;
 using SIS.HTTP.Headers.Contracts;
 
@@ -15,5 +16,7 @@ namespace SIS.HTTP.Responses.Contracts
         void AddHeader(HttpHeader header);
 
         byte[] GetBytes();
+
+        void AddCookie(HttpCookie cookie);
     }
 }

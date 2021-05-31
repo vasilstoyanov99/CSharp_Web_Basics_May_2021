@@ -17,5 +17,7 @@ namespace SIS.HTTP.Requests.Contracts
         IHttpHeaderCollection Headers { get; }
 
         HttpRequestMethod RequestMethod { get; }
+
+        void ParseCookies();
     }
 }
