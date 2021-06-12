@@ -47,7 +47,7 @@ namespace SUS.HTTP
 
                 var data = new List<byte>();
                 var buffer = new byte[HttpConstants.BufferSize];
-                var position = 1;
+                var position = 0;
 
                 while (true)
                 {

@@ -17,7 +17,7 @@ namespace MyFirstMvcApp
             server.AddRoute("/favicon.ico", Favicon);
             server.AddRoute("about", About);
 
-            await server.StartAsync(90);
+            await server.StartAsync(8080);
         }
 
         static HttpResponse HomePage(HttpRequest request)
