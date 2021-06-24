@@ -93,6 +93,7 @@
             var commits = this.data
                 .Commits
                 .Where(x => x.CreatorId == this.User.Id)
+                .OrderByDescending(x => x.CreatedOn)
                 .Select(x => new CommitListingViewModel()
                 {
                     CreatedOn = x.CreatedOn.ToString("MM/dd/yyyy HH:mm",

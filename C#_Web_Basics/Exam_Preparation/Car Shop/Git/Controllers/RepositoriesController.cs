@@ -29,6 +29,7 @@
             var publicRepos = this.data
                     .Repositories
                     .Where(x => x.IsPublic == true)
+                    .OrderByDescending(x => x.CreatedOn)
                     .Select(x => new RepositoryListingViewModel()
                     {
                         CommitsCount = x.Commits.Count,
