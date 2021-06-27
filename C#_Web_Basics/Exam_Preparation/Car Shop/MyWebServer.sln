@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWebServer", "MyWebServer\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarShop", "CarShop\CarShop.csproj", "{A0BA581B-CD86-49C8-BD4E-350F70C3DEF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Git", "Git\Git.csproj", "{EF640A1B-0704-4D34-B261-931D5D73D003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Git", "Git\Git.csproj", "{EF640A1B-0704-4D34-B261-931D5D73D003}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
