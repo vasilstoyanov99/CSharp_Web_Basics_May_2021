@@ -82,7 +82,7 @@
                 return Error("There are no more free seats for this trip!");
             }
 
-            var userTrip = trip.UserTrips.FirstOrDefault(x => x.UserId == this.User.Id
+            var userTrip = this.data.UsersTrips.FirstOrDefault(x => x.UserId == this.User.Id
                                                           && x.TripId == tripId);
 
             if (userTrip != null)
